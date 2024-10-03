@@ -1,11 +1,28 @@
 import axios from "axios";
-import express from "express";
+import express, {Response} from "express";
 import {PERENUAL_API_KEY} from "../env";
 import logger from "../logging";
 
 const perenualRouter = express.Router()
 
 const perenual_api_addr = "https://perenual.com/api"
+
+const performGet = async (requestUrl: string, res: Response) => {
+    try {
+        // Forward request to Perenual API
+        const response = await axios.get(
+            requestUrl,
+            {}
+        )
+        logger.debug(`Response data: ${JSON.stringify(response.data)}`)
+        // Return response from Perenual APi
+        res.status(response.status).send(response.data)
+    } catch (err) {
+        // Log and return server error
+        logger.error(err)
+        res.status(500).send('Error fetching data');
+    }
+}
 
 // Species list
 perenualRouter.get('/species-list', async (req, res) => {
@@ -27,20 +44,7 @@ perenualRouter.get('/species-list', async (req, res) => {
 
     const requestUrl = `${perenual_api_addr}/species-list?key=${PERENUAL_API_KEY.toString()}&q=${q}&edible=${edible}&poisonous=${poisonous}&cycle=${cycle}&watering=${watering}&sunlight=${sunlight}&page=${page}&indoor=1`
 
-    try {
-        // Forward request to Perenual API
-        const response = await axios.get(
-            requestUrl,
-            {}
-        )
-        logger.debug(`Response data: ${JSON.stringify(response.data)}`)
-        // Return response from Perenual APi
-        res.status(response.status).send(response.data)
-    } catch (err) {
-        // Log and return server error
-        logger.error(err)
-        res.status(500).send('Error fetching data');
-    }
+    await performGet(requestUrl, res)
 })
 
 
@@ -58,20 +62,7 @@ perenualRouter.get('/species/details/:plantId', async (req, res) => {
 
     const requestUrl = `${perenual_api_addr}/species/details/${plantId}?key=${PERENUAL_API_KEY.toString()}`
 
-    try {
-        // Forward request to Perenual API
-        const response = await axios.get(
-            requestUrl,
-            {}
-        )
-        logger.debug(`Response data: ${JSON.stringify(response.data)}`)
-        // Return response from Perenual APi
-        res.status(response.status).send(response.data)
-    } catch (err) {
-        // Log and return server error
-        logger.error(err)
-        res.status(500).send('Error fetching data');
-    }
+    await performGet(requestUrl, res)
 })
 
 export default perenualRouter;
