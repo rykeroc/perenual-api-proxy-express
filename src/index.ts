@@ -1,14 +1,10 @@
 import express, { Application } from 'express';
-import dotenv from "dotenv";
 import {specs, swaggerUi} from "./swagger";
-import {perenualRouter} from "./api/perenual";
+import perenualRouter from "./api/perenual";
+import {PORT} from "./env";
 
 // Init the application
 const app: Application = express();
-
-// Environment variables
-dotenv.config();
-const port = process.env.PORT || 8000;
 
 // Swagger documentation
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
@@ -25,6 +21,6 @@ app.use('/api', perenualRouter)
 
 
 // Start app
-app.listen(port, () => {
-    console.log(`Server is listening at http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Server is listening at http://localhost:${PORT}`);
 });

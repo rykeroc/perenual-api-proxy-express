@@ -1,20 +1,15 @@
 import axios from "axios";
 import express from "express";
-import dotenv from "dotenv";
+import {PERENUAL_API_KEY} from "../env";
 
-export const perenualRouter = express.Router()
-
-
-// Load Perenual API key from env
-dotenv.config();
-const api_key: string | undefined = process.env.PERENUAL_API_KEY
+const perenualRouter = express.Router()
 
 const perenual_api_addr = "https://perenual.com/api"
 
 // Species list
 perenualRouter.get('/species-list', async (req, res) => {
     // Check if API key
-    if (api_key === undefined) {
+    if (PERENUAL_API_KEY === undefined) {
         console.log('Api key is undefined. Check configuration.')
         res.status(500).send('An unexpected error occurred.')
         return
@@ -28,7 +23,7 @@ perenualRouter.get('/species-list', async (req, res) => {
     const watering = req.query.watering || ""
     const sunlight = req.query.sunlight || ""
 
-    const requestUrl = `${perenual_api_addr}/species-list?key=${api_key.toString()}&q=${q}&edible=${edible}&poisonous=${poisonous}&cycle=${cycle}&watering=${watering}&sunlight=${sunlight}&page=${page}&indoor=1`
+    const requestUrl = `${perenual_api_addr}/species-list?key=${PERENUAL_API_KEY.toString()}&q=${q}&edible=${edible}&poisonous=${poisonous}&cycle=${cycle}&watering=${watering}&sunlight=${sunlight}&page=${page}&indoor=1`
 
     try {
         // Forward request to Perenual API
@@ -49,7 +44,7 @@ perenualRouter.get('/species-list', async (req, res) => {
 // Species Details
 perenualRouter.get('/species/details/:plantId', async (req, res) => {
     // Check if API key
-    if (api_key === undefined) {
+    if (PERENUAL_API_KEY === undefined) {
         console.log('Api key is undefined. Check configuration.')
         res.status(500).send('An unexpected error occurred.')
         return
@@ -57,7 +52,7 @@ perenualRouter.get('/species/details/:plantId', async (req, res) => {
 
     const plantId = req.params.plantId || ""
 
-    const requestUrl = `${perenual_api_addr}/species/details/${plantId}?key=${api_key.toString()}`
+    const requestUrl = `${perenual_api_addr}/species/details/${plantId}?key=${PERENUAL_API_KEY.toString()}`
 
     try {
         // Forward request to Perenual API
@@ -73,3 +68,5 @@ perenualRouter.get('/species/details/:plantId', async (req, res) => {
         res.status(500).send('Error fetching data');
     }
 })
+
+export default perenualRouter;
