@@ -1,6 +1,7 @@
 import axios from "axios";
 import express from "express";
 import {PERENUAL_API_KEY} from "../env";
+import logger from "../logging";
 
 const perenualRouter = express.Router()
 
@@ -10,11 +11,12 @@ const perenual_api_addr = "https://perenual.com/api"
 perenualRouter.get('/species-list', async (req, res) => {
     // Check if API key
     if (PERENUAL_API_KEY === undefined) {
-        console.log('Api key is undefined. Check configuration.')
+        logger.error('Api key is undefined. Check configuration.')
         res.status(500).send('An unexpected error occurred.')
         return
     }
 
+    logger.debug(`Params: ${JSON.stringify(req.query)}`)
     const page = req.query.page || "1"
     const q = req.query.q || ""
     const edible = req.query.edible || ""
@@ -31,11 +33,12 @@ perenualRouter.get('/species-list', async (req, res) => {
             requestUrl,
             {}
         )
+        logger.debug(`Response data: ${JSON.stringify(response.data)}`)
         // Return response from Perenual APi
         res.status(response.status).send(response.data)
     } catch (err) {
         // Log and return server error
-        console.error(err)
+        logger.error(err)
         res.status(500).send('Error fetching data');
     }
 })
@@ -45,11 +48,12 @@ perenualRouter.get('/species-list', async (req, res) => {
 perenualRouter.get('/species/details/:plantId', async (req, res) => {
     // Check if API key
     if (PERENUAL_API_KEY === undefined) {
-        console.log('Api key is undefined. Check configuration.')
+        logger.error('Api key is undefined. Check configuration.')
         res.status(500).send('An unexpected error occurred.')
         return
     }
 
+    logger.debug(`Params: ${JSON.stringify(req.params)}`)
     const plantId = req.params.plantId || ""
 
     const requestUrl = `${perenual_api_addr}/species/details/${plantId}?key=${PERENUAL_API_KEY.toString()}`
@@ -60,11 +64,12 @@ perenualRouter.get('/species/details/:plantId', async (req, res) => {
             requestUrl,
             {}
         )
+        logger.debug(`Response data: ${JSON.stringify(response.data)}`)
         // Return response from Perenual APi
         res.status(response.status).send(response.data)
     } catch (err) {
         // Log and return server error
-        console.error(err)
+        logger.error(err)
         res.status(500).send('Error fetching data');
     }
 })
