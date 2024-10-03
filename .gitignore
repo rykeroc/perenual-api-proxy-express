@@ -10,3 +10,6 @@ logs/
 # Build files
 dist/
 node_modules/
+
+# Jest
+coverage/

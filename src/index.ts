@@ -28,6 +28,10 @@ app.use('/api', perenualRouter)
 
 
 // Start app
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     logger.info(`Server started at http://localhost:${PORT}`);
 });
+
+export {
+    app, server
+};
