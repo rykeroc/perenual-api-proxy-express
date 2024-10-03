@@ -1,6 +1,12 @@
+# JetBrains IDE
 .idea/
 
+# Environment vars
 .env
 
+# Application logs
+logs/
+
+# Build files
 dist/
 node_modules/
