@@ -15,6 +15,8 @@ Swagger documentation can be accessed at `/docs`
 
 ## Docker
 
+Access the Docker hub repository [here](https://hub.docker.com/).
+
 Create a docker container using a command like the following:
 
 ```bash
