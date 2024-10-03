@@ -1,13 +1,16 @@
 import express, { Express, Request, Response , Application } from 'express';
 import dotenv from 'dotenv';
 
-dotenv.config();
-
+const { specs, swaggerUi } = require('./swagger');
 const app: Application = express();
+
+dotenv.config();
 const port = process.env.PORT || 8000;
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Welcome to Express Server');
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+app.get('/health', (_req, res) => {
+    res.status(200).json({ status: 'UP', message: 'Service is healthy' });
 });
 
 // Start app
