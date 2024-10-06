@@ -34,7 +34,6 @@ perenualRouter.get('/species-list', async (req, res, next) => {
             {}
         )
         logger.debug(`Response data: ${JSON.stringify(response.data)}`)
-        // Return response from Perenual APi
         res.status(response.status).send(response.data)
     } catch (error) {next(error)}
 })
@@ -52,23 +51,56 @@ perenualRouter.get('/species/details/:plantId', async (req, res, next) => {
     logger.debug(`Params: ${JSON.stringify(req.params)}`)
     const plantId = req.params.plantId || ""
 
-    const requestUrl = `${perenual_api_addr}/species/details/${plantId}?key=${PERENUAL_API_KEY.toString()}`
+    const detailsUrl = `${perenual_api_addr}/species/details/${plantId}?key=${PERENUAL_API_KEY.toString()}`
 
     try
     {
         // Forward request to Perenual API
-        const response = await axios.get(
-            requestUrl,
-            {}
-        )
-        let resData = response.data
+        const detailsPromise = await axios.get( detailsUrl, {} )
+
+        let resData = detailsPromise.data
 
         // Remove data which can expose the Perenual API key
         delete resData['hardiness_location']
         delete resData['care-guides']
+
         logger.debug(`Response data: ${JSON.stringify(resData)}`)
-        // Return response from Perenual APi
-        res.status(response.status).send(resData)
+        res.status(detailsPromise.status).send(resData)
+    } catch (error) {next(error)}
+})
+
+
+// Species Details
+perenualRouter.get('/species-care-guide/:plantId', async (req, res, next) => {
+    // Check if API key
+    if (PERENUAL_API_KEY === undefined) {
+        logger.error('Api key is undefined. Check configuration.')
+        res.status(500).send('An unexpected error occurred.')
+        return
+    }
+
+    logger.debug(`Params: ${JSON.stringify(req.params)}`)
+    const plantId = req.params.plantId || ""
+
+    const careGuideUrl = `${perenual_api_addr}/species-care-guide-list?species_id=${plantId}&key=${PERENUAL_API_KEY.toString()}`
+
+    try
+    {
+        // Forward request to Perenual API
+        const careGuideReponse = await axios.get( careGuideUrl, {} )
+
+        let resData = careGuideReponse.data
+
+        // Removed unnecessary data
+        delete resData['to']
+        delete resData['per_page']
+        delete resData['current_page']
+        delete resData['from']
+        delete resData['last_page']
+        delete resData['total']
+
+        logger.debug(`Response data: ${JSON.stringify(resData)}`)
+        res.status(careGuideReponse.status).send(resData.data[0])
     } catch (error) {next(error)}
 })
 
