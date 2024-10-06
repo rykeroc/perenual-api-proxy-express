@@ -3,6 +3,7 @@ import {specs, swaggerUi} from "./swagger";
 import perenualRouter from "./api/perenual";
 import {PORT} from "./env";
 import logger from "./logging";
+import {defaultHandler} from "./defaultHandler";
 
 // Init the application
 const app: Application = express();
@@ -26,6 +27,8 @@ app.get('/health', (_req, res) => {
 // Add app routers
 app.use('/api', perenualRouter)
 
+// Error handler middleware
+app.use(defaultHandler)
 
 // Start app
 const server = app.listen(PORT, () => {

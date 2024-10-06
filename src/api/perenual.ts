@@ -1,5 +1,5 @@
 import axios from "axios";
-import express, {Response} from "express";
+import express from "express";
 import {PERENUAL_API_KEY} from "../env";
 import logger from "../logging";
 
@@ -8,7 +8,7 @@ const perenualRouter = express.Router()
 const perenual_api_addr = "https://perenual.com/api"
 
 // Species list
-perenualRouter.get('/species-list', async (req, res) => {
+perenualRouter.get('/species-list', async (req, res, next) => {
     // Check if API key
     if (PERENUAL_API_KEY === undefined) {
         logger.error('Api key is undefined. Check configuration.')
@@ -36,16 +36,12 @@ perenualRouter.get('/species-list', async (req, res) => {
         logger.debug(`Response data: ${JSON.stringify(response.data)}`)
         // Return response from Perenual APi
         res.status(response.status).send(response.data)
-    } catch (err) {
-        // Log and return server error
-        logger.error(err)
-        res.status(500).send('Error fetching data');
-    }
+    } catch (error) {next(error)}
 })
 
 
 // Species Details
-perenualRouter.get('/species/details/:plantId', async (req, res) => {
+perenualRouter.get('/species/details/:plantId', async (req, res, next) => {
     // Check if API key
     if (PERENUAL_API_KEY === undefined) {
         logger.error('Api key is undefined. Check configuration.')
@@ -58,22 +54,22 @@ perenualRouter.get('/species/details/:plantId', async (req, res) => {
 
     const requestUrl = `${perenual_api_addr}/species/details/${plantId}?key=${PERENUAL_API_KEY.toString()}`
 
-    try {
+    try
+    {
         // Forward request to Perenual API
         const response = await axios.get(
             requestUrl,
             {}
         )
         let resData = response.data
+
+        // Remove data which can expose the Perenual API key
         delete resData['hardiness_location']
         delete resData['care-guides']
         logger.debug(`Response data: ${JSON.stringify(resData)}`)
         // Return response from Perenual APi
         res.status(response.status).send(resData)
-    } catch (err) {
-        // Log and return server error
-        logger.error(err)
-        res.status(500).send('Error fetching data');
-    }})
+    } catch (error) {next(error)}
+})
 
 export default perenualRouter;
