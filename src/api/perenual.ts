@@ -7,15 +7,19 @@ const perenualRouter = express.Router()
 
 const perenual_api_addr = "https://perenual.com/api"
 
-// Species list
-perenualRouter.get('/species-list', async (req, res, next) => {
-    // Check if API key
+
+const perenaulApiKeyMiddleware = (_error: any, _req: any, res: any, next: any) => {
+    // Check for API key
     if (PERENUAL_API_KEY === undefined) {
         logger.error('Api key is undefined. Check configuration.')
         res.status(500).send('An unexpected error occurred.')
-        return
-    }
+    } else
+        next()
+}
 
+
+// Species list
+perenualRouter.get('/species-list', async (req, res, next) => {
     logger.debug(`Params: ${JSON.stringify(req.query)}`)
     const page = req.query.page || "1"
     const q = req.query.q || ""
@@ -25,7 +29,7 @@ perenualRouter.get('/species-list', async (req, res, next) => {
     const watering = req.query.watering || ""
     const sunlight = req.query.sunlight || ""
 
-    const requestUrl = `${perenual_api_addr}/species-list?key=${PERENUAL_API_KEY.toString()}&q=${q}&edible=${edible}&poisonous=${poisonous}&cycle=${cycle}&watering=${watering}&sunlight=${sunlight}&page=${page}&indoor=1`
+    const requestUrl = `${perenual_api_addr}/species-list?key=${PERENUAL_API_KEY!.toString()}&q=${q}&edible=${edible}&poisonous=${poisonous}&cycle=${cycle}&watering=${watering}&sunlight=${sunlight}&page=${page}&indoor=1`
 
     try {
         // Forward request to Perenual API
@@ -41,17 +45,10 @@ perenualRouter.get('/species-list', async (req, res, next) => {
 
 // Species Details
 perenualRouter.get('/species/details/:plantId', async (req, res, next) => {
-    // Check if API key
-    if (PERENUAL_API_KEY === undefined) {
-        logger.error('Api key is undefined. Check configuration.')
-        res.status(500).send('An unexpected error occurred.')
-        return
-    }
-
     logger.debug(`Params: ${JSON.stringify(req.params)}`)
     const plantId = req.params.plantId || ""
 
-    const detailsUrl = `${perenual_api_addr}/species/details/${plantId}?key=${PERENUAL_API_KEY.toString()}`
+    const detailsUrl = `${perenual_api_addr}/species/details/${plantId}?key=${PERENUAL_API_KEY!.toString()}`
 
     try
     {
@@ -72,17 +69,10 @@ perenualRouter.get('/species/details/:plantId', async (req, res, next) => {
 
 // Species Details
 perenualRouter.get('/species-care-guide/:plantId', async (req, res, next) => {
-    // Check if API key
-    if (PERENUAL_API_KEY === undefined) {
-        logger.error('Api key is undefined. Check configuration.')
-        res.status(500).send('An unexpected error occurred.')
-        return
-    }
-
     logger.debug(`Params: ${JSON.stringify(req.params)}`)
     const plantId = req.params.plantId || ""
 
-    const careGuideUrl = `${perenual_api_addr}/species-care-guide-list?species_id=${plantId}&key=${PERENUAL_API_KEY.toString()}`
+    const careGuideUrl = `${perenual_api_addr}/species-care-guide-list?species_id=${plantId}&key=${PERENUAL_API_KEY!.toString()}`
 
     try
     {
@@ -105,3 +95,7 @@ perenualRouter.get('/species-care-guide/:plantId', async (req, res, next) => {
 })
 
 export default perenualRouter;
+
+export {
+    perenaulApiKeyMiddleware
+}

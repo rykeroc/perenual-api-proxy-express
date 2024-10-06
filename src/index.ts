@@ -1,6 +1,6 @@
 import express, { Application } from 'express';
 import {specs, swaggerUi} from "./swagger";
-import perenualRouter from "./api/perenual";
+import perenualRouter, {perenaulApiKeyMiddleware} from "./api/perenual";
 import {PORT} from "./env";
 import logger from "./logging";
 import {defaultHandler} from "./defaultHandler";
@@ -23,6 +23,8 @@ app.get('/health', (_req, res) => {
     res.status(200).json(json);
 });
 
+// Middleware to check for Perenual API key
+app.use(perenaulApiKeyMiddleware)
 
 // Add app routers
 app.use('/api', perenualRouter)
