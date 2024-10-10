@@ -14,9 +14,10 @@ describe('Perenual API Endpoints', () => {
     })
 
     describe('Species Details', () => {
+        const url = '/api/species/details'
         test('Success - Valid plant ID', async () => {
             const plantId = 1
-            const res = await request(app).get(`/api/species/details/${plantId}`)
+            const res = await request(app).get(`${url}/${plantId}`)
 
             expect(res.status).toBe(200)
             expect(res.body).toBeDefined()
@@ -41,9 +42,10 @@ describe('Perenual API Endpoints', () => {
     })
 
     describe('Species Care Guide', () => {
+        const url = '/api/species-care-guide'
         test('Success - Valid plant ID', async () => {
             const plantId = 1
-            const res = await request(app).get(`/api/species-care-guide/${plantId}`)
+            const res = await request(app).get(`${url}/${plantId}`)
 
             expect(res.status).toBe(200)
             expect(res.body).toBeDefined()
