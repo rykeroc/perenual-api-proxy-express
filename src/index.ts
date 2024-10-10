@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
 
 import {specs, swaggerUi} from "./swagger";
-import perenualRouter, {perenaulApiKeyMiddleware} from "./api/perenual";
+import perenualRouter from "./api/perenual";
 import {PORT} from "./env";
 import logger from "./logging";
 import {defaultHandler} from "./defaultHandler";
