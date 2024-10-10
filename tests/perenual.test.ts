@@ -40,6 +40,28 @@ describe('Perenual API Endpoints', () => {
         })
     })
 
+    describe('Species Care Guide', () => {
+        test('Success - Valid plant ID', async () => {
+            const plantId = 1
+            const res = await request(app).get(`/api/species-care-guide/${plantId}`)
+
+            expect(res.status).toBe(200)
+            expect(res.body).toBeDefined()
+            expect(res.body.species_id).toBe(plantId)
+            expect(res.body.common_name).toBeDefined()
+            expect(res.body.scientific_name).toBeDefined()
+            expect(res.body.section).toBeDefined()
+            expect(res.body.section.length).toBeGreaterThan(0)
+            for (const section of res.body.section) {
+                expect(section.id).toBeDefined()
+                expect(section.description).toBeDefined()
+            }
+            expect(res.body.section[0].type).toBe("watering")
+            expect(res.body.section[1].type).toBe("sunlight")
+            expect(res.body.section[2].type).toBe("pruning")
+        })
+    })
+
     afterAll((done) => {
         server.close(done)
     })
