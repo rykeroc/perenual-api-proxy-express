@@ -1,7 +1,26 @@
 import request from "supertest";
 import {app, server} from '../src'
 
-describe('Perenual API Endpoints', () => {
+afterAll((done) => {
+    server.close(done)
+})
+
+describe('Index', () => {
+    describe('Health', () => {
+        const url = '/health'
+        test('Success - No params', async () => {
+            const res = await request(app).get(url)
+
+            expect(res.status).toBe(200)
+            expect(res.body.status).toBeDefined()
+            expect(res.body.status).toBe("UP")
+            expect(res.body.message).toBeDefined()
+            expect(res.body.message).toBe("Service is healthy")
+        })
+    })
+})
+
+describe('Perenual router', () => {
     describe('Species List', () => {
         const url = '/api/species-list'
         test('Success - No params', async () => {
@@ -62,9 +81,5 @@ describe('Perenual API Endpoints', () => {
             expect(res.body.section[1].type).toBe("sunlight")
             expect(res.body.section[2].type).toBe("pruning")
         })
-    })
-
-    afterAll((done) => {
-        server.close(done)
     })
 })

@@ -15,6 +15,7 @@ const perenaulApiKeyMiddleware = (_error: any, _req: any, res: any, next: any) =
     if (PERENUAL_API_KEY === undefined) {
         logger.error('Api key is undefined. Check configuration.')
         res.status(500).send('An unexpected error occurred.')
+        return;
     } else
         next()
 }
@@ -50,6 +51,7 @@ perenualRouter.get('/species-list', timeOutCache, async (req, res, next) => {
         )
         logger.debug(`Response data: ${JSON.stringify(response.data)}`)
         res.status(response.status).send(response.data)
+        return
     } catch (error) {next(error)}
 })
 
@@ -75,6 +77,7 @@ perenualRouter.get('/species/details/:plantId', timeOutCache, async (req, res, n
 
         logger.debug(`Response data: ${JSON.stringify(resData)}`)
         res.status(detailsPromise.status).send(resData)
+        return
     } catch (error) {next(error)}
 })
 
@@ -104,6 +107,7 @@ perenualRouter.get('/species-care-guide/:plantId', timeOutCache, async (req, res
 
         logger.debug(`Response data: ${JSON.stringify(resData)}`)
         res.status(careGuideReponse.status).send(resData.data[0])
+        return
     } catch (error) {next(error)}
 })
 

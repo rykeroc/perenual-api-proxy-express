@@ -24,6 +24,7 @@ app.get('/health', (_req, res) => {
     const json = { status: 'UP', message: 'Service is healthy' }
     logger.info(json)
     res.status(200).json(json);
+    return
 });
 
 // Add app routers
