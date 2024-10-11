@@ -6,7 +6,7 @@
     "build": "npx tsc",
     "start": "node ./dist/main.js",
     "dev": "nodemon ./dist/main.js",
-    "test": "jest --verbose --coverage --detectOpenHandlesdetectOpenHandles --forceExit ./tests",
+    "test": "jest --verbose --coverage --detectOpenHandles --forceExit ./tests",
     "lint": "npx eslint src"
   },
   "keywords": [],
