@@ -39,6 +39,7 @@ jobs:
         path: node_modules
 
   lint:
+    needs: build
     runs-on: ubuntu-latest
     steps:
     - name: Download node_modules artifact
@@ -51,6 +52,7 @@ jobs:
       run: npm run lint
 
   test:
+    needs: build
     runs-on: ubuntu-latest
     steps:
     
