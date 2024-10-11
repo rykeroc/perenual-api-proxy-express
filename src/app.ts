@@ -2,7 +2,6 @@ import express, { Application } from 'express';
 
 import {specs, swaggerUi} from "./swagger";
 import perenualRouter from "./api/perenual";
-import {PORT} from "./env";
 import logger from "./logging";
 import {defaultHandler} from "./defaultHandler";
 
@@ -33,11 +32,7 @@ app.use('/api', perenualRouter)
 // Error handler middleware
 app.use(defaultHandler)
 
-// Start app
-const server = app.listen(PORT, () => {
-    logger.info(`Server started at http://localhost:${PORT}`);
-});
 
 export {
-    app, server
+    app
 };

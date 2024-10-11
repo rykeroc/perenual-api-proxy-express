@@ -1,15 +1,11 @@
-import request from "supertest";
-import {app, server} from '../src'
-
-afterAll((done) => {
-    server.close(done)
-})
+import supertest from "supertest";
+import {app} from '../src/app'
 
 describe('Index', () => {
     describe('Health', () => {
         const url = '/health'
         test('Success - No params', async () => {
-            const res = await request(app).get(url)
+            const res = await supertest(app).get(url)
 
             expect(res.status).toBe(200)
             expect(res.body.status).toBeDefined()
@@ -24,7 +20,7 @@ describe('Perenual router', () => {
     describe('Species List', () => {
         const url = '/api/species-list'
         test('Success - No params', async () => {
-            const res = await request(app).get(url)
+            const res = await supertest(app).get(url)
 
             expect(res.status).toBe(200)
             expect(res.body.data).toBeDefined()
@@ -36,7 +32,7 @@ describe('Perenual router', () => {
         const url = '/api/species/details'
         test('Success - Valid plant ID', async () => {
             const plantId = 1
-            const res = await request(app).get(`${url}/${plantId}`)
+            const res = await supertest(app).get(`${url}/${plantId}`)
 
             expect(res.status).toBe(200)
             expect(res.body).toBeDefined()
@@ -64,7 +60,7 @@ describe('Perenual router', () => {
         const url = '/api/species-care-guide'
         test('Success - Valid plant ID', async () => {
             const plantId = 1
-            const res = await request(app).get(`${url}/${plantId}`)
+            const res = await supertest(app).get(`${url}/${plantId}`)
 
             expect(res.status).toBe(200)
             expect(res.body).toBeDefined()
