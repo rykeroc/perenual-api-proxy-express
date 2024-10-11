@@ -1,0 +1,64 @@
+# This workflow builds the project, then runs the linter, and runs all tests.
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build project
+      run: npm run build --if-present
+
+    - name: Upload node_modules artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: node-modules
+        path: node_modules
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download node_modules artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: node-modules
+        path: node_modules
+        
+    - name: Lint project
+      run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Download node_modules artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: node-modules
+        path: node_modules
+        
+    - name: Run tests
+      run: npm run tests
