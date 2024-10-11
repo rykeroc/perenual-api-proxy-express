@@ -1,7 +1,7 @@
 import logger from "./logging";
 import axios from "axios";
 
-const defaultHandler = (error: any, _req: any, res: any, _next: any) => {
+const defaultHandler = (error: any, _req: any, res: any) => {
     if (axios.isAxiosError(error)) {
         if (error.response) {
             logger.error(`Status code: ${error.response.status}, Details: ${error.response.data}`)

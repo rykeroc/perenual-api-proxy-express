@@ -23,7 +23,7 @@ perenualRouter.use(perenaulApiKeyMiddleware);
 
 const timeOutCache = expressCache({
     timeOut: 60000,
-    onTimeout: (key: any, _value: any) => {
+    onTimeout: (key: any) => {
         logger.info(`Cache removed for Key: ${key}`);
     }
 })
@@ -67,7 +67,7 @@ perenualRouter.get('/species/details/:plantId', timeOutCache, async (req, res, n
         // Forward request to Perenual API
         const detailsPromise = await axios.get( detailsUrl, {} )
 
-        let resData = detailsPromise.data
+        const resData = detailsPromise.data
 
         // Remove data which can expose the Perenual API key
         delete resData['hardiness_location']
@@ -92,7 +92,7 @@ perenualRouter.get('/species-care-guide/:plantId', timeOutCache, async (req, res
         // Forward request to Perenual API
         const careGuideReponse = await axios.get( careGuideUrl, {} )
 
-        let resData = careGuideReponse.data
+        const resData = careGuideReponse.data
 
         // Removed unnecessary data
         delete resData['to']

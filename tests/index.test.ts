@@ -1,5 +1,5 @@
 import request from "supertest";
-import {app, server} from '../src'
+import {app} from '../src'
 
 describe('Health', () => {
     const url = '/health'
